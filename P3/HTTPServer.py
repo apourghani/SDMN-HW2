@@ -1,7 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import http.server
 import cgi
-
+import json
 
 
 
@@ -14,32 +14,37 @@ class SimpleHTTPServer(BaseHTTPRequestHandler):
 				self.send_response(200)
 				self.send_header("Content-type", "application/json")
 				self.end_headers()
-				self.wfile.write(bytes('{"status": "OK"}'), "utf-8")
+				self.wfile.write(bytes(json.dumps({"status":'OK'},), 'utf-8'))
+				
 			else:
-				self.send_response(200)
+				self.send_response(201)
 				self.send_header("Content-type", "application/json")
 				self.end_headers()
-				self.wfile.write(bytes('{"status": "not OK"}'), "utf-8")
-
-
+				self.wfile.write(bytes(json.dumps({"status":'not OK'},), 'utf-8'))
+				
+				
+				
 	def do_POST(self):
 		if self.path == '/api/v1/status':
 			contentType, paramDict = cgi.parse_header(self.headers.get("Content-type"))
-			paramDict["boundary"] = bytes(paramDict["boundary"], "utf-8") 		#Doubt???????????
+			x = self.rfile
+			print(x)
 			recContent = cgi.parse_multipart(self.rfile, paramDict)
-			if recContent.get("status") == "not OK":
-				self.send_response(201)
+			print(recContent)
+			
+			if recContent.get("status") == "OK":
+				self.send_response(200)
 				self.send_header("Content-type", "application/json")
 				self.end_headers()
-				self.wfile.write(bytes('{"status": "not OK"}'), "utf-8")
-				self.GETOK = False
-				
-			elif recContent.get("status") == "OK" and self.GETOK:
-				self.send_response(201)
-				self.send_header("Content-type", "application/json")
-				self.end_headers()
-				self.wfile.write(bytes('{"status": "not OK"}'), "utf-8")
+				self.wfile.write(bytes(json.dumps({"status":'OK'},), 'utf-8'))
 				self.GETOK = True
+				
+			elif recContent.get("status") == "not OK" and self.GETOK:
+				self.send_response(201)
+				self.send_header("Content-type", "application/json")
+				self.end_headers()
+				self.wfile.write(bytes(json.dumps({"status":'not OK'},), 'utf-8'))
+				self.GETOK = False
 
 
 
@@ -58,15 +63,6 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-
-
-
-
-
-
-
-
 
 
 
