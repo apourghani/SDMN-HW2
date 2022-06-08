@@ -4,65 +4,64 @@ import cgi
 import json
 
 
-
+GETOK = True
 class SimpleHTTPServer(BaseHTTPRequestHandler):
-	GETOK = True
 	def do_GET(self):
-
+		global GETOK
 		if self.path == '/api/v1/status':
-			if self.GETOK:
+			print(GETOK)
+			if GETOK:
 				self.send_response(200)
 				self.send_header("Content-type", "application/json")
 				self.end_headers()
 				self.wfile.write(bytes(json.dumps({"status":'OK'},), 'utf-8'))
-				
 			else:
 				self.send_response(201)
 				self.send_header("Content-type", "application/json")
 				self.end_headers()
 				self.wfile.write(bytes(json.dumps({"status":'not OK'},), 'utf-8'))
-				
-				
-				
 	def do_POST(self):
-		if self.path == '/api/v1/status':
-			contentType, paramDict = cgi.parse_header(self.headers.get("Content-type"))
-			x = self.rfile
-			print(x)
-			recContent = cgi.parse_multipart(self.rfile, paramDict)
-			print(recContent)
-			
-			if recContent.get("status") == "OK":
+		global GETOK
+		if self.path =="/api/v1/status":
+			content_length = int(self.headers['Content-Length'])
+			content = self.rfile.read(content_length)
+			if content.decode('UTF-8')[8:10] == "OK":
+				GETOK = True
 				self.send_response(200)
 				self.send_header("Content-type", "application/json")
 				self.end_headers()
-				self.wfile.write(bytes(json.dumps({"status":'OK'},), 'utf-8'))
-				self.GETOK = True
+				self.wfile.write(bytes(json.dumps({"status":'OK'}), 'utf-8'))
 				
-			elif recContent.get("status") == "not OK" and self.GETOK:
+				
+			elif str(content.decode("utf-8"))[8:10] == "no":
+				GETOK = False
 				self.send_response(201)
 				self.send_header("Content-type", "application/json")
 				self.end_headers()
-				self.wfile.write(bytes(json.dumps({"status":'not OK'},), 'utf-8'))
-				self.GETOK = False
-
-
+				self.wfile.write(bytes(json.dumps({"status":'not OK'}), 'utf-8'))
+				
 
 
 def main():
-	HOST = "localhost"
+	'''HOST = "localhost"
 	PORT = 8000
 	server_ip_port = (HOST, PORT) 
 	server = HTTPServer(server_ip_port, SimpleHTTPServer)
-	print("Server is running ....")
-	server.serve_forever()
+	'''
+	print("Server is running on port 8000 ....")
+	with HTTPServer(("",8000),SimpleHTTPServer) as server:
+		server.serve_forever()
 	
-	
-
-
 
 if __name__ == '__main__':
 	main()
+
+
+
+
+
+
+
 
 
 
