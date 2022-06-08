@@ -43,13 +43,10 @@ class SimpleHTTPServer(BaseHTTPRequestHandler):
 
 
 def main():
-	'''HOST = "localhost"
 	PORT = 8000
-	server_ip_port = (HOST, PORT) 
-	server = HTTPServer(server_ip_port, SimpleHTTPServer)
-	'''
+
 	print("Server is running on port 8000 ....")
-	with HTTPServer(("",8000),SimpleHTTPServer) as server:
+	with HTTPServer(("",PORT),SimpleHTTPServer) as server:
 		server.serve_forever()
 	
 
