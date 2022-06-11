@@ -1,4 +1,6 @@
 #!/bin/bash 
+#Result of pinging each node from another using this code attached
+
 #Defining the node that pings
 pingSource=""
 #Defining the node that is being pinged
@@ -39,10 +41,10 @@ elif [ "$2" == "NS3" ]
 elif [ "$2" == "NS4" ]
   then
     pingDest="10.10.0.3"
-elif [ "$2" == "Router1" && $flag == "right" ]
+elif [ "$2" == "Router1" ] && [ $flag == "right" ]
   then
     pingDest="10.10.0.1"
-elif [ "$2" == "Router1" && $flag == "left" ]
+elif [ "$2" == "Router1" ] && [ $flag == "left" ]
   then
     pingDest="172.0.0.1"
 fi
