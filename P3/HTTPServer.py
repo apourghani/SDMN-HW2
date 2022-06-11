@@ -3,8 +3,9 @@ import http.server
 import cgi
 import json
 
-
+#this variable specifies GET function output
 GETOK = True
+
 class SimpleHTTPServer(BaseHTTPRequestHandler):
 	def do_GET(self):
 		global GETOK
@@ -52,14 +53,6 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-
-
-
-
-
-
-
 
 
 

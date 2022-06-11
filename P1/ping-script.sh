@@ -6,6 +6,8 @@ pingDest=""
 
 flag="right"
 
+
+#Finding the node that pings
 if [ "$1" == "NS1" ];
   then
     pingSource="NS1"
@@ -24,7 +26,7 @@ elif [ "$1" == "Router1" ];
 fi
 
 
-
+#Finfing the node that is being pinged
 if [ "$2" == "NS1" ]
   then
     pingDest="172.0.0.2"
