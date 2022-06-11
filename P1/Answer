@@ -1,0 +1,2 @@
+One of the ways that comes to mind, is to assign ips to the bridges, so the root subnet can route between them.
+The other way is to route packets in each node, to the other subnet
